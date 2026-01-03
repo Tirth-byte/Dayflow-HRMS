@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <div class="card">
+        <h2>Apply for Leave</h2>
+        <form method="POST">
+            <div class="form-group">
+                <label class="form-label">Leave Type</label>
+                <select name="type" class="form-control">
+                    <option value="paid">Paid Leave</option>
+                    <option value="sick">Sick Leave</option>
+                    <option value="unpaid">Unpaid Leave</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">From Date</label>
+                <input type="date" name="start_date" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">To Date</label>
+                <input type="date" name="end_date" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Reason</label>
+                <textarea name="reason" class="form-control" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Request</button>
+            <a href="/leaves" class="btn" style="color: #666;">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

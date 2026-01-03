@@ -1,0 +1,58 @@
+# Dayflow HRMS - Installation Guide
+
+Follow these simple steps to set up and run Dayflow HRMS on your local machine.
+
+## 1. Prerequisites
+Ensure you have **Python 3.x** installed.
+To check, open your terminal/command prompt and run:
+```bash
+python3 --version
+# OR
+python --version
+```
+
+## 2. Setup Virtual Environment (Recommended)
+A virtual environment keeps your project dependencies isolated.
+
+### macOS / Linux
+Open your terminal in the `flask_mvp` folder and run:
+```bash
+# Create virtual environment named 'venv'
+python3 -m venv venv
+
+# Activate the environment
+source venv/bin/activate
+```
+*You will see `(venv)` appear at the start of your terminal line.*
+
+### Windows
+Open Command Prompt or PowerShell in the `flask_mvp` folder and run:
+```bash
+# Create virtual environment
+python -m venv venv
+
+# Activate the environment
+venv\Scripts\activate
+```
+
+## 3. Install Dependencies
+Once the virtual environment is active, install the required libraries:
+```bash
+pip install -r requirements.txt
+```
+
+## 4. Run the Application
+Start the Dayflow server:
+```bash
+python3 app.py
+# OR
+python app.py
+```
+
+## 5. Access the App
+Open your web browser and go to:
+[http://localhost:8000](http://localhost:8000)
+
+---
+**Note:** To stop the server, press `CTRL+C` in the terminal.
+To exit the virtual environment, simply type `deactivate`.

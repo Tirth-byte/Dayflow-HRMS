@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1>Leave Requests</h1>
+    <a href="/leaves/new" class="btn btn-primary">New Request</a>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    {% if session.get('role') == 'hr' %}<th>Employee</th>{% endif %}
+                    <th>Date Range</th>
+                    <th>Type</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                    {% if session.get('role') == 'hr' %}<th>Action</th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for leave in leaves %}
+                <tr>
+                    {% if session.get('role') == 'hr' %}
+                    <td><strong>{{ leave.user_name }}</strong></td>
+                    {% endif %}
+                    <td>
+                        {{ leave.start_date }} <span style="color: #999;">to</span> {{ leave.end_date }}
+                    </td>
+                    <td><span style="text-transform: capitalize;">{{ leave.type }}</span></td>
+                    <td>{{ leave.reason }}</td>
+                    <td>
+                        {% if leave.status == 'approved' %}
+                        <span class="badge badge-success">Approved</span>
+                        {% elif leave.status == 'rejected' %}
+                        <span class="badge badge-danger">Rejected</span>
+                        {% else %}
+                        <span class="badge badge-warning">Pending</span>
+                        {% endif %}
+                    </td>
+                    {% if session.get('role') == 'hr' %}
+                    <td>
+                        {% if leave.status == 'pending' %}
+                        <div style="display: flex; gap: 0.5rem;">
+                            <a href="/leaves/approve/{{ leave.id }}" class="btn btn-success"
+                                style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">Approve</a>
+                            <a href="/leaves/reject/{{ leave.id }}" class="btn btn-danger"
+                                style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">Reject</a>
+                        </div>
+                        {% else %}
+                        <span style="color: #999; font-size: 0.85rem;">Processed</span>
+                        {% endif %}
+                    </td>
+                    {% endif %}
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" style="text-align: center; color: #666; padding: 2rem;">No leave requests found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

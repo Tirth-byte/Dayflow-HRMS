@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Payroll Management</h1>
+
+{% if session.get('role') == 'hr' %}
+<div class="card">
+    <h3>Process Payroll</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Base Salary</th>
+                <th>Bonus</th>
+                <th>Deductions</th>
+                <th>Net Wage</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in payrolls %}
+            <tr>
+                <form method="POST" action="/payroll/update/{{ p.id }}">
+                    <td>{{ p.user_name }}</td>
+                    <td>₹{{ p.salary }}</td>
+                    <td>
+                        <input type="number" name="bonus" value="{{ p.bonus }}" class="form-control"
+                            style="width: 80px;">
+                    </td>
+                    <td>
+                        <input type="number" name="deductions" value="{{ p.deductions }}" class="form-control"
+                            style="width: 80px;">
+                    </td>
+                    <td><strong>₹{{ p.net_wage }}</strong></td>
+                    <td>
+                        <button type="submit" class="btn btn-primary" style="padding: 0.25rem 0.5rem;">Save</button>
+                    </td>
+                </form>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="card">
+    <h3>My Payslip</h3>
+    {% if my_payroll %}
+    <div class="stats-grid" style="margin-top: 2rem;">
+        <div class="stat-card">
+            <h4>Base Salary</h4>
+            <div class="stat-value" style="font-size: 1.5rem;">₹{{ my_payroll.salary }}</div>
+        </div>
+        <div class="stat-card">
+            <h4>Bonus</h4>
+            <div class="stat-value" style="font-size: 1.5rem; color: var(--success);">+₹{{ my_payroll.bonus }}</div>
+        </div>
+        <div class="stat-card">
+            <h4>Deductions</h4>
+            <div class="stat-value" style="font-size: 1.5rem; color: var(--danger);">-₹{{ my_payroll.deductions }}</div>
+        </div>
+        <div class="stat-card" style="background: #F3F4F6; border-radius: 8px;">
+            <h4>Net Pay</h4>
+            <div class="stat-value">₹{{ my_payroll.net_wage }}</div>
+        </div>
+    </div>
+    {% else %}
+    <p>No payroll record found.</p>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

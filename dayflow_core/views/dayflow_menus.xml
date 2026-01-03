@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="dayflow_root_menu" name="Dayflow" web_icon="hr,static/description/icon.png" sequence="1"/>
+
+    <menuitem id="dayflow_dashboard_menu" name="Dashboard" parent="dayflow_root_menu" sequence="1" action="hr.open_view_employee_list_my"/>
+    <menuitem id="dayflow_attendance_menu" name="Attendance" parent="dayflow_root_menu" sequence="2" action="hr_attendance.hr_attendance_action_my_attendances"/>
+    <menuitem id="dayflow_leaves_menu" name="Time Off" parent="dayflow_root_menu" sequence="3" action="hr_holidays.action_hr_holidays_dashboard"/>
+</odoo>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Roles category -->
+        <record id="module_category_dayflow" model="ir.module.category">
+            <field name="name">Dayflow HRMS</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <!-- Group: Employee (Base User) -->
+        <record id="group_dayflow_employee" model="res.groups">
+            <field name="name">Employee</field>
+            <field name="category_id" ref="module_category_dayflow"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <!-- Group: HR Manager -->
+        <record id="group_dayflow_manager" model="res.groups">
+            <field name="name">HR Manager</field>
+            <field name="category_id" ref="module_category_dayflow"/>
+            <field name="implied_ids" eval="[(4, ref('group_dayflow_employee'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+
+        <!-- RECORD RULES (Row Level Security) -->
+
+        <!-- Rule: Employee sees ONLY their own Employee Record -->
+        <record id="rule_dayflow_employee_own" model="ir.rule">
+            <field name="name">Dayflow: See Own Employee Profile</field>
+            <field name="model_id" ref="model_dayflow_employee"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_dayflow_employee'))]"/>
+        </record>
+        <!-- HR sees ALL Employees -->
+        <record id="rule_dayflow_employee_all" model="ir.rule">
+            <field name="name">Dayflow: HR Sees All Profiles</field>
+            <field name="model_id" ref="model_dayflow_employee"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_dayflow_manager'))]"/>
+        </record>
+
+        <!-- Rule: Employee sees ONLY their own Attendance -->
+        <record id="rule_dayflow_attendance_own" model="ir.rule">
+            <field name="name">Dayflow: See Own Attendance</field>
+            <field name="model_id" ref="model_dayflow_attendance"/>
+            <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_dayflow_employee'))]"/>
+        </record>
+        <!-- HR sees ALL Attendance -->
+        <record id="rule_dayflow_attendance_all" model="ir.rule">
+            <field name="name">Dayflow: HR Sees All Attendance</field>
+            <field name="model_id" ref="model_dayflow_attendance"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_dayflow_manager'))]"/>
+        </record>
+
+        <!-- Rule: Employee sees ONLY their own Leaves -->
+        <record id="rule_dayflow_leave_own" model="ir.rule">
+            <field name="name">Dayflow: See Own Leaves</field>
+            <field name="model_id" ref="model_dayflow_leave"/>
+            <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_dayflow_employee'))]"/>
+        </record>
+        <!-- HR sees ALL Leaves -->
+        <record id="rule_dayflow_leave_all" model="ir.rule">
+            <field name="name">Dayflow: HR Sees All Leaves</field>
+            <field name="model_id" ref="model_dayflow_leave"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_dayflow_manager'))]"/>
+        </record>
+
+    </data>
+</odoo>

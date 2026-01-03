@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_dayflow_payslip_tree" model="ir.ui.view">
+        <field name="name">dayflow.payslip.tree</field>
+        <field name="model">dayflow.payslip</field>
+        <field name="arch" type="xml">
+            <tree string="Payslips">
+                <field name="employee_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="net_wage" decoration-bf="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'done'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_dayflow_payslip_form" model="ir.ui.view">
+        <field name="name">dayflow.payslip.form</field>
+        <field name="model">dayflow.payslip</field>
+        <field name="arch" type="xml">
+            <form string="Payslip" create="false" edit="false">
+                <header>
+                    <button name="action_confirm" string="Confirm Payment" type="object" class="oe_highlight btn-success" 
+                            states="draft" groups="dayflow.group_dayflow_manager"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title mb-4">
+                        <h1 class="text-primary">
+                            <field name="employee_id" readonly="1" options="{'no_open': True}"/>
+                        </h1>
+                        <div class="o_row text-muted">
+                            <i class="fa fa-calendar mr-2"/>
+                            <field name="date_start" readonly="1"/> 
+                            <span class="mx-2">to</span> 
+                            <field name="date_end" readonly="1"/>
+                        </div>
+                    </div>
+                    
+                    <group>
+                        <group string="Earnings" groups="dayflow.group_dayflow_manager">
+                            <field name="gross_wage" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="bonus" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                        <group string="Deductions" groups="dayflow.group_dayflow_manager">
+                            <field name="tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="deductions" attrs="{'readonly': [('state', '=', 'done')]}" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </group>
+
+                    <group class="mt-4">
+                        <group class="oe_subtotal_footer oe_right">
+                            <field name="gross_wage" string="Gross Pay" widget="monetary" options="{'currency_field': 'currency_id'}" groups="dayflow.group_dayflow_manager"/>
+                            <field name="bonus" string="+ Bonus" widget="monetary" options="{'currency_field': 'currency_id'}" groups="dayflow.group_dayflow_manager"/>
+                            <field name="tax" string="- Tax" widget="monetary" options="{'currency_field': 'currency_id'}" groups="dayflow.group_dayflow_manager"/>
+                            <field name="deductions" string="- Deductions" widget="monetary" options="{'currency_field': 'currency_id'}" groups="dayflow.group_dayflow_manager"/>
+                            
+                            <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                <label for="net_wage"/>
+                            </div>
+                            <field name="net_wage" nolabel="1" class="oe_subtotal_footer_separator text-success" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                    
+                    <div class="alert alert-info mt-3" attrs="{'invisible': [('state', '!=', 'draft')]}" groups="dayflow.group_dayflow_manager">
+                        <i class="fa fa-pencil"/> <strong>HR Only:</strong> Adjust Bonus and Deductions before confirming.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

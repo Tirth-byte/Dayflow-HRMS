@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dayflow_employee_user,dayflow.employee.user,model_dayflow_employee,dayflow.group_dayflow_employee,1,1,0,0
+access_dayflow_employee_manager,dayflow.employee.manager,model_dayflow_employee,dayflow.group_dayflow_manager,1,1,1,1
+access_dayflow_attendance_user,dayflow.attendance.user,model_dayflow_attendance,dayflow.group_dayflow_employee,1,1,1,0
+access_dayflow_attendance_manager,dayflow.attendance.manager,model_dayflow_attendance,dayflow.group_dayflow_manager,1,1,1,1
+access_dayflow_leave_user,dayflow.leave.user,model_dayflow_leave,dayflow.group_dayflow_employee,1,1,1,0
+access_dayflow_leave_manager,dayflow.leave.manager,model_dayflow_leave,dayflow.group_dayflow_manager,1,1,1,1
+access_dayflow_dashboard_user,dayflow.dashboard.user,model_dayflow_dashboard,dayflow.group_dayflow_employee,1,0,0,0
+access_dayflow_dashboard_manager,dayflow.dashboard.manager,model_dayflow_dashboard,dayflow.group_dayflow_manager,1,1,1,1
+access_dayflow_payslip_user,dayflow.payslip.user,model_dayflow_payslip,dayflow.group_dayflow_employee,1,0,0,0
+access_dayflow_payslip_manager,dayflow.payslip.manager,model_dayflow_payslip,dayflow.group_dayflow_manager,1,1,1,1

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_dayflow_leave_tree" model="ir.ui.view">
+        <field name="name">dayflow.leave.tree</field>
+        <field name="model">dayflow.leave</field>
+        <field name="arch" type="xml">
+            <tree string="Leave Requests" 
+                  default_order="id desc"
+                  decoration-bf="from_date &lt;= context_today() and to_date &gt;= context_today()"
+                  decoration-info="status == 'pending'" 
+                  decoration-success="status == 'approved'" 
+                  decoration-muted="status == 'rejected'">
+                <field name="employee_id"/>
+                <field name="leave_type"/>
+                <field name="from_date"/>
+                <field name="to_date"/>
+                <field name="number_of_days" widget="integer" string="Days" sum="Total Days"/>
+                <field name="status" widget="badge" 
+                       decoration-warning="status == 'pending'" 
+                       decoration-success="status == 'approved'" 
+                       decoration-danger="status == 'rejected'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_dayflow_leave_form" model="ir.ui.view">
+        <field name="name">dayflow.leave.form</field>
+        <field name="model">dayflow.leave</field>
+        <field name="arch" type="xml">
+            <form string="Leave Request">
+                <header>
+                    <button name="action_approve" states="pending" string="Approve Request" type="object" class="oe_highlight btn-success" groups="dayflow.group_dayflow_manager"/>
+                    <button name="action_reject" states="pending" string="Reject Request" type="object" class="btn-danger" groups="dayflow.group_dayflow_manager"/>
+                    <field name="status" widget="statusbar" statusbar_visible="pending,approved,rejected"/>
+                </header>
+                <sheet>
+                    <div class="oe_title mb-4">
+                        <label for="employee_id" class="oe_edit_only text-muted"/>
+                        <h1 class="text-primary"><field name="employee_id" placeholder="Select Employee..." options="{'no_create': True}"/></h1>
+                    </div>
+                    <group>
+                        <group string="Request Details" class="mt-2">
+                            <field name="leave_type" widget="radio" options="{'horizontal': true}"/>
+                            <separator/>
+                            <label for="from_date" string="Duration"/>
+                            <div class="o_row">
+                                <field name="from_date" widget="daterange" options="{'related_end_date': 'to_date'}"/>
+                                <i class="fa fa-long-arrow-right mx-2" title="To"/>
+                                <field name="to_date" widget="daterange" options="{'related_start_date': 'from_date'}"/>
+                            </div>
+                            <field name="number_of_days" readonly="1" decoration-bf="1" class="mt-2"/>
+                        </group>
+                        <group string="Status Info" class="mt-2">
+                            <div class="alert alert-info" role="alert" attrs="{'invisible': [('status', '!=', 'pending')]}">
+                                <i class="fa fa-clock-o"/> This request is currently <b>Pending</b> approval from HR.
+                            </div>
+                            <div class="alert alert-success" role="alert" attrs="{'invisible': [('status', '!=', 'approved')]}">
+                                <i class="fa fa-check-circle"/> <b>Approved</b>. Enjoy your leave!
+                            </div>
+                            <div class="alert alert-danger" role="alert" attrs="{'invisible': [('status', '!=', 'rejected')]}">
+                                <i class="fa fa-times-circle"/> <b>Rejected</b>. Contact HR for details.
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_dayflow_leave_search" model="ir.ui.view">
+        <field name="name">dayflow.leave.search</field>
+        <field name="model">dayflow.leave</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="leave_type"/>
+                <filter string="Today's Leaves" name="today_leaves" 
+                        domain="[('from_date', '&lt;=', context_today()), ('to_date', '&gt;=', context_today())]"/>
+                <separator/>
+                <filter string="Pending" name="pending" domain="[('status', '=', 'pending')]"/>
+                <filter string="Approved" name="approved" domain="[('status', '=', 'approved')]"/>
+                <separator/>
+                <filter string="My Leaves" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Employee" name="group_employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                    <filter string="Type" name="group_type" context="{'group_by': 'leave_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

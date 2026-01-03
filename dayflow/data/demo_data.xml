@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 1. HR Manager (Linked to Admin User for instant visibility) -->
+        <record id="demo_employee_admin" model="dayflow.employee">
+            <field name="name">Administrator (HR)</field>
+            <field name="email">admin@dayflow.com</field>
+            <field name="role">hr</field>
+            <field name="salary">50000</field>
+            <field name="department">Management</field>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+
+        <!-- 2. Standard Employee: John -->
+        <record id="demo_employee_john" model="dayflow.employee">
+            <field name="name">John Doe</field>
+            <field name="email">john@dayflow.com</field>
+            <field name="role">employee</field>
+            <field name="salary">30000</field>
+            <field name="department">Sales</field>
+        </record>
+
+        <!-- 3. Standard Employee: Jane -->
+        <record id="demo_employee_jane" model="dayflow.employee">
+            <field name="name">Jane Smith</field>
+            <field name="email">jane@dayflow.com</field>
+            <field name="role">employee</field>
+            <field name="salary">32000</field>
+            <field name="department">IT</field>
+        </record>
+
+        <!-- Attendance Records -->
+        <!-- Admin checked in today -->
+        <record id="demo_attendance_admin_today" model="dayflow.attendance">
+            <field name="employee_id" ref="demo_employee_admin"/>
+            <field name="date" eval="time.strftime('%Y-%m-%d')"/>
+            <field name="check_in" eval="time.strftime('%Y-%m-%d 09:00:00')"/>
+            <field name="status">present</field>
+        </record>
+
+        <!-- John checked in today -->
+        <record id="demo_attendance_john_today" model="dayflow.attendance">
+            <field name="employee_id" ref="demo_employee_john"/>
+            <field name="date" eval="time.strftime('%Y-%m-%d')"/>
+            <field name="check_in" eval="time.strftime('%Y-%m-%d 09:15:00')"/>
+            <field name="status">present</field>
+        </record>
+        
+        <!-- Leave Requests -->
+        <!-- Jane requested leave -->
+        <record id="demo_leave_jane" model="dayflow.leave">
+            <field name="employee_id" ref="demo_employee_jane"/>
+            <field name="leave_type">sick</field>
+            <field name="from_date" eval="time.strftime('%Y-%m-%d')"/>
+            <field name="to_date" eval="time.strftime('%Y-%m-%d')"/>
+            <field name="status">pending</field>
+        </record>
+    </data>
+</odoo>
