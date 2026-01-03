@@ -1,0 +1,162 @@
+# System Architecture – Dayflow HRMS  [ DEVANSHI JANI ]
+
+## 1. Overview
+Dayflow HRMS is a lightweight, local-first Human Resource Management System designed to streamline essential workforce operations including employee management, attendance tracking, leave processing, and payroll viewing. Built as a Minimum Viable Product (MVP) for the **Innovax** hackathon submission, the system prioritizes implementation speed, clarity of code, and ease of local execution without external cloud dependencies.
+
+## 2. High-Level Architecture
+Dayflow follows a standard **Model-View-Controller (MVC)** architectural pattern adapted for Flask. The system is monolithic to ensure simplicity and direct data consistency.
+
+### Architecture Diagram
+
+```mermaid
+graph LR
+    User((User)) -->|HTTP Request| Browser[Browser / UI]
+    Browser -->|Routes / Methods| Flask[Flask Controller]
+    subgraph Backend
+        Flask -->|Business Logic| Logic{App Logic}
+        Logic -->|SQL Query| DB[(SQLite Database)]
+        DB -->|Row Data| Logic
+        Logic -->|Context Data| Jinja[Jinja2 Engine]
+    end
+    Jinja -->|Rendered HTML| Browser
+    Browser -->|Display| User
+    
+    style Flask fill:#f9f,stroke:#333
+    style DB fill:#ff9,stroke:#333
+```
+
+### Architectural Layers
+1.  **Presentation Layer (View)**:
+    *   **Technology**: HTML5, CSS3, Jinja2 Templates.
+    *   **Responsibility**: Renders the user interface, handles user inputs, and displays data dynamically.
+2.  **Application Layer (Controller)**:
+    *   **Technology**: Python, Flask.
+    *   **Responsibility**: Manages routing, business logic, authentication, and orchestrates data flow between the UI and the database.
+3.  **Data Layer (Model)**:
+    *   **Technology**: SQLite.
+    *   **Responsibility**: Persists application data (users, logs, leaves, payroll) in a relational format.
+
+## 3. Component Breakdown
+
+### Frontend
+*   **Templates**: Modularized HTML files extending a base layout (`base.html`) for consistent navigation and branding.
+*   **Static Assets**: Contains custom CSS (`style.css`) for responsive design and media assets (Team Logo).
+*   **Dashboard**: Dynamic interface varying by user role (HR vs. Employee).
+
+### Backend
+*   **Core Application (`app.py`)**: The central entry point housing all route definitions, database connection logic, and application configuration.
+*   **Access Control**: Custom decorators (`@login_required`, `@hr_required`) enforce permission boundaries across endpoints.
+
+### Database
+*   **Engine**: serverless SQLite database (`dayflow.db`).
+*   **Schema & Relationships**:
+
+```mermaid
+erDiagram
+    USERS ||--o{ ATTENDANCE : logs
+    USERS ||--o{ LEAVES : requests
+    USERS ||--|| PAYROLL : has
+    
+    USERS {
+        int id PK
+        string email
+        string role
+        string department
+        float salary
+    }
+    
+    ATTENDANCE {
+        int id PK
+        int user_id FK
+        date date
+        time check_in
+        time check_out
+        string status
+    }
+    
+    LEAVES {
+        int id PK
+        int user_id FK
+        string type
+        date start_date
+        date end_date
+        string status
+    }
+    
+    PAYROLL {
+        int id PK
+        int user_id FK
+        float salary
+        float bonus
+        float deductions
+        float net_wage
+    }
+```
+
+## 4. Authentication & Authorization Flow
+1.  **Login**: User submits credentials -> Backend verifies against `users` table -> Session token created.
+2.  **Session Security**: User ID and Role are stored in a cryptographically signed session cookie.
+
+### Login Sequence
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant F as Flask App
+    participant D as Database
+    
+    U->>F: POST /login (email, password)
+    F->>D: SELECT * FROM users WHERE email=?
+    D-->>F: User Record
+    
+    alt Invalid Credentials
+        F-->>U: Flash Error "Invalid Credentials"
+    else Valid Credentials
+        F->>F: Create Session (user_id, role)
+        F-->>U: Redirect /dashboard
+    end
+```
+
+## 5. Key Functional Workflows
+
+*   **Employee Management**: HR creates a profile -> System generates default Payroll record -> Employee can now log in.
+*   **Attendance**: Employee clicks "Check In" -> System ensures no duplicate entry for the day -> Timestamp recorded.
+*   **Leave Workflow**: 
+
+```mermaid
+stateDiagram-v2
+    [*] --> Pending: Employee Applies
+    Pending --> Approved: HR Approves
+    Pending --> Rejected: HR Rejects
+    Approved --> [*]
+    Rejected --> [*]
+```
+
+*   **Payroll**: HR updates variable components (Bonus/Deductions) -> System recalculates Net Wage immediately -> Employee views updated payslip.
+
+## 6. Technology Stack
+*   **Programming Language**: Python 3.x
+*   **Web Framework**: Flask (Microframework)
+*   **Templating Engine**: Jinja2
+*   **Database**: SQLite 3
+*   **Frontend**: Native HTML/CSS (No heavy framework overhead)
+*   **Runtime**: Python Virtual Environment
+
+## 7. Deployment & Execution Model
+*   **Environment**: Designed for local execution (`localhost`).
+*   **Server**: Uses Flask’s built-in development server (Werkzeug) for the hackathon context.
+*   **Portability**: The entire system (code + database) is self-contained in a single directory, making it trivial to zip, share, and run on any machine with Python installed.
+
+## 8. Architecture Design Decisions
+*   **Flask vs. Django**: Flask was chosen for its minimal boilerplate, allowing for rapid iteration and a transparent codebase that is easier to debug during a hackathon.
+*   **SQLite Usage**: Eliminates the need for a separate database server process (like PostgreSQL), reducing setup time and system resources.
+*   **Monolithic Structure**: Keeping frontend and backend tightly coupled simplifies state management and eliminates CORS issues, ensuring a robust MVP delivery.
+
+## 9. Scalability Considerations (Future Scope)
+While optimized for the current scope, the architecture allows for scaling:
+*   **Database**: SQLite can be swapped for PostgreSQL by changing the connection string / driver.
+*   **API**: Route logic can be refactored into RESTful API endpoints to support a React/Vue frontend or Mobile App.
+*   **Deployment**: The Flask app is WSGI-compatible, allowing deployment on Gunicorn/Nginx in a containerized environment (Docker).
+
+## 10. Conclusion
+The architecture of Dayflow HRMS strikes a deliberate balance between functionality and simplicity. By leveraging a local-first, standard MVC approach, **Team Innovax** has delivered a stable, responsive, and feature-complete HR solution that meets all requirements while remaining lightweight and easy to maintain.
