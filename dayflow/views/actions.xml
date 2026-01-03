@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_dayflow_employee" model="ir.actions.act_window">
+        <field name="name">Employees</field>
+        <field name="res_model">dayflow.employee</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create your first employee!
+          </p>
+        </field>
+    </record>
+
+    <record id="action_dayflow_attendance" model="ir.actions.act_window">
+        <field name="name">Attendance</field>
+        <field name="res_model">dayflow.attendance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            No attendance records found
+          </p>
+        </field>
+    </record>
+
+    <record id="action_dayflow_leave" model="ir.actions.act_window">
+        <field name="name">Leave Requests</field>
+        <field name="res_model">dayflow.leave</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new leave request
+          </p>
+        </field>
+    </record>
+</odoo>

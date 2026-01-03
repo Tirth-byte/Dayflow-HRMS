@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_dayflow_attendance_tree" model="ir.ui.view">
+        <field name="name">dayflow.attendance.tree</field>
+        <field name="model">dayflow.attendance</field>
+        <field name="arch" type="xml">
+            <tree string="Attendance Logs" 
+                  default_order="date desc, create_date desc" 
+                  decoration-bf="date == context_today()" 
+                  decoration-info="date == context_today()" 
+                  decoration-muted="status == 'absent'">
+                <field name="date"/>
+                <field name="employee_id"/>
+                <field name="check_in" widget="float_time"/>
+                <field name="check_out"/>
+                <field name="status" widget="badge" 
+                       decoration-success="status == 'present'" 
+                       decoration-danger="status == 'absent'" 
+                       decoration-warning="status == 'half_day'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_dayflow_attendance_form" model="ir.ui.view">
+        <field name="name">dayflow.attendance.form</field>
+        <field name="model">dayflow.attendance</field>
+        <field name="arch" type="xml">
+            <form string="Attendance Record">
+                <header>
+                    <button name="action_check_in" string="Check In" type="object" class="oe_highlight btn-success" 
+                            attrs="{'invisible': [('check_in', '!=', False)]}"/>
+                    <button name="action_check_out" string="Check Out" type="object" class="oe_highlight btn-warning" 
+                            attrs="{'invisible': ['|', ('check_in', '=', False), ('check_out', '!=', False)]}"/>
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="employee_id" readonly="1" placeholder="Employee"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Timing Details">
+                            <field name="date"/>
+                            <field name="check_in" readonly="1"/>
+                            <field name="check_out" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Search View -->
+    <record id="view_dayflow_attendance_search" model="ir.ui.view">
+        <field name="name">dayflow.attendance.search</field>
+        <field name="model">dayflow.attendance</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <filter string="Today" name="today" domain="[('date', '=', context_today())]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Employee" name="group_employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Date" name="group_date" context="{'group_by': 'date'}"/>
+                    <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

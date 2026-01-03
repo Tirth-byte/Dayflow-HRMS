@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <h1>Attendance</h1>
+
+    <div class="card" style="margin-top: 1rem;">
+        <h3>Today's Action</h3>
+        <p>Date: {{ today }}</p>
+
+        {% if not today_record %}
+        <form action="/attendance/check_in" method="POST" style="display: inline;">
+            <button type="submit" class="btn btn-success">Check In Now</button>
+        </form>
+        {% elif not today_record.check_out %}
+        <div class="alert alert-success">Checked in at {{ today_record.check_in }}</div>
+        <form action="/attendance/check_out" method="POST" style="display: inline;">
+            <button type="submit" class="btn btn-warning">Check Out Now</button>
+        </form>
+        {% else %}
+        <div class="alert alert-success">
+            Shift Completed.<br>
+            In: {{ today_record.check_in }} | Out: {{ today_record.check_out }}<br>
+            Status: <strong>{{ today_record.status|upper }}</strong>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <h3>History</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                {% if session.get('role') == 'hr' %}<th>Employee</th>{% endif %}
+                <th>Date</th>
+                <th>Check In</th>
+                <th>Check Out</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rec in history %}
+            <tr>
+                {% if session.get('role') == 'hr' %}<td>{{ rec.user_name }}</td>{% endif %}
+                <td>{{ rec.date }}</td>
+                <td>{{ rec.check_in or '-' }}</td>
+                <td>{{ rec.check_out or '-' }}</td>
+                <td>
+                    {% if rec.status == 'present' %}
+                    <span class="badge badge-success">Present</span>
+                    {% elif rec.status == 'half_day' %}
+                    <span class="badge badge-warning">Half Day</span>
+                    {% else %}
+                    <span class="badge badge-danger">Absent</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

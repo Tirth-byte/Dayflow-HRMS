@@ -1,0 +1,26 @@
+{
+    'name': 'Dayflow',
+    'version': '1.0',
+    'summary': 'Dayflow HRMS Minimal Module',
+    'description': 'Hackathon-ready Odoo module for Dayflow HRMS.',
+    'author': 'Dayflow Team',
+    'depends': ['base'],
+    'data': [
+        'security/dayflow_security.xml',
+        'security/ir.model.access.csv',
+        'views/actions.xml',
+        'views/employee_views.xml',
+        'views/attendance_views.xml',
+        'views/leave_views.xml',
+        'views/payroll_views.xml',
+        'views/attendance_report.xml',
+        'views/leave_report.xml',
+        'data/dashboard_data.xml',
+        'views/dashboard_view.xml',
+    ],
+    'demo': [
+        'data/demo_data.xml',
+    ],
+    'installable': True,
+    'application': True,
+}

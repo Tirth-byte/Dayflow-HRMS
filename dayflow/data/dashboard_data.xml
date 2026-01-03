@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="dayflow_dashboard_record" model="dayflow.dashboard">
+        <field name="name">Main Dashboard</field>
+    </record>
+</odoo>

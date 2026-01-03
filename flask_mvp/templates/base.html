@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dayflow HRMS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="/" class="brand" style="display: flex; align-items: center; gap: 10px;">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Innovax Logo"
+                style="height: 40px; width: auto;">
+            Dayflow HRMS
+        </a>
+        <div class="nav-links">
+            {% if session.get('user_id') %}
+            <a href="/">Dashboard</a>
+            {% if session.get('role') == 'hr' %}
+            <a href="/employees">Employees</a>
+            {% endif %}
+            <a href="/attendance">Attendance</a>
+            <a href="/leaves">Leaves</a>
+            <a href="/payroll">Payroll</a>
+            <a href="/logout" style="color: var(--danger);">Logout ({{ session.get('name') }})</a>
+            {% else %}
+            <a href="/login">Login</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+</body>
+
+</html>

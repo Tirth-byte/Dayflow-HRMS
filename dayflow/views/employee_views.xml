@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_dayflow_employee_tree" model="ir.ui.view">
+        <field name="name">dayflow.employee.tree</field>
+        <field name="model">dayflow.employee</field>
+        <field name="arch" type="xml">
+            <tree string="Employees">
+                <field name="name" decoration-bf="1"/>
+                <field name="department"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="role" widget="badge" decoration-info="role == 'employee'" decoration-primary="role == 'hr'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_dayflow_employee_form" model="ir.ui.view">
+        <field name="name">dayflow.employee.form</field>
+        <field name="model">dayflow.employee</field>
+        <field name="arch" type="xml">
+            <form string="Employee Profile">
+                <sheet>
+                    <div class="oe_title mb-4">
+                        <label for="name" class="oe_edit_only text-muted"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. John Doe"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Contact Info">
+                            <field name="email" widget="email"/>
+                            <field name="phone" widget="phone"/>
+                            <field name="user_id" options="{'no_create': True}"/>
+                        </group>
+                        <group string="Employment Details">
+                            <field name="department"/>
+                            <field name="role"/>
+                            <field name="salary" widget="monetary" options="{'currency_field': 'currency_id'}"/> 
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Search View -->
+    <record id="view_dayflow_employee_search" model="ir.ui.view">
+        <field name="name">dayflow.employee.search</field>
+        <field name="model">dayflow.employee</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="department"/>
+                <field name="role"/>
+                <filter string="HR Managers" name="hr_managers" domain="[('role', '=', 'hr')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Department" name="group_department" context="{'group_by': 'department'}"/>
+                    <filter string="Role" name="group_role" context="{'group_by': 'role'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Dashboard Form View (Enhanced) -->
+    <record id="view_dayflow_dashboard_form" model="ir.ui.view">
+        <field name="name">dayflow.dashboard.form</field>
+        <field name="model">dayflow.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Overview" create="false" edit="false" delete="false">
+                <sheet>
+                    <div class="oe_title mb-4 pb-2 border-bottom">
+                        <h1 class="text-primary">
+                            <i class="fa fa-tachometer mr-2"/> Dashboard
+                        </h1>
+                        <p class="text-muted">Real-time HR insights and daily activity tracking.</p>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <!-- Total Employees Card -->
+                        <div class="col-md-4">
+                            <div class="card text-white bg-primary h-100 shadow-sm">
+                                <div class="card-header border-0 bg-transparent">
+                                    <i class="fa fa-users fa-2x"/> Total Staff
+                                </div>
+                                <div class="card-body text-center">
+                                    <h2 class="display-4 font-weight-bold">
+                                        <field name="employee_count"/>
+                                    </h2>
+                                    <p class="card-text">Active Employees</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Attendance Card -->
+                        <div class="col-md-4">
+                            <div class="card text-white bg-success h-100 shadow-sm">
+                                <div class="card-header border-0 bg-transparent">
+                                    <i class="fa fa-clock-o fa-2x"/> Attendance
+                                </div>
+                                <div class="card-body text-center">
+                                    <h2 class="display-4 font-weight-bold">
+                                        <field name="attendance_count"/>
+                                    </h2>
+                                    <p class="card-text">Present Today</p>
+                                    <p attrs="{'invisible': [('attendance_count', '>', 0)]}" class="small text-white-50">
+                                        No check-ins yet.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Leaves Card -->
+                        <div class="col-md-4">
+                            <div class="card text-dark bg-warning h-100 shadow-sm">
+                                <div class="card-header border-0 bg-transparent">
+                                    <i class="fa fa-calendar-minus-o fa-2x"/> Leave Requests
+                                </div>
+                                <div class="card-body text-center">
+                                    <h2 class="display-4 font-weight-bold">
+                                        <field name="pending_leaves"/>
+                                    </h2>
+                                    <p class="card-text">Pending Approval</p>
+                                    <p attrs="{'invisible': [('pending_leaves', '>', 0)]}" class="small text-muted">
+                                        All caught up!
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-5">
+                        <div class="col-12">
+                             <div class="alert alert-info border-0 shadow-sm" role="alert">
+                                <h4 class="alert-heading"><i class="fa fa-info-circle"/> System Status</h4>
+                                <p class="mb-0">
+                                    Dayflow HRMS is running in <strong>Production Mode</strong>. 
+                                    Data is secured via Role-Based Access Control.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action to open Dashboard -->
+    <record id="action_dayflow_dashboard" model="ir.actions.act_window">
+        <field name="name">Overview</field>
+        <field name="res_model">dayflow.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="res_id" ref="dayflow.dayflow_dashboard_record"/>
+        <field name="target">inline</field>
+    </record>
+
+    <!-- Main Menu Structure -->
+    <menuitem id="menu_dayflow_root" name="Dayflow HR" sequence="10" web_icon="hr,static/description/icon.png"/>
+
+    <menuitem id="menu_dayflow_dashboard"
+              name="Dashboard"
+              parent="menu_dayflow_root"
+              action="action_dayflow_dashboard"
+              sequence="1"/>
+              
+    <menuitem id="menu_dayflow_ops" name="Operations" parent="menu_dayflow_root" sequence="5"/>
+        <menuitem id="menu_dayflow_attendance" name="Attendance" parent="menu_dayflow_ops" action="action_dayflow_attendance" sequence="1"/>
+        <menuitem id="menu_dayflow_leave" name="Leave Requests" parent="menu_dayflow_ops" action="action_dayflow_leave" sequence="2"/>
+
+    <menuitem id="menu_dayflow_mgmt" name="Management" parent="menu_dayflow_root" sequence="10" groups="dayflow.group_dayflow_manager"/>
+        <menuitem id="menu_dayflow_employee" name="Employees" parent="menu_dayflow_mgmt" action="action_dayflow_employee" sequence="1"/>
+        <menuitem id="menu_dayflow_payslip" name="Payroll" parent="menu_dayflow_mgmt" action="action_dayflow_payslip" sequence="5"/>
+</odoo>

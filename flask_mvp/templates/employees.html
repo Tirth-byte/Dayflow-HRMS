@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h1><span style="border-left: 4px solid var(--primary); padding-left: 10px;">Employee Management</span></h1>
+    <a href="/employees/new" class="btn btn-primary">
+        <span style="margin-right: 5px; font-weight: bold;">+</span> Add Employee
+    </a>
+</div>
+
+<div class="card" style="padding: 1rem;">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Department</th>
+                    <th>Salary</th>
+                    <th style="text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emp in employees %}
+                <tr>
+                    <td><strong>{{ emp.name }}</strong></td>
+                    <td>{{ emp.email }}</td>
+                    <td>
+                        {% if emp.role == 'hr' %}
+                        <span class="badge badge-warning">HR Manager</span>
+                        {% else %}
+                        <span class="badge badge-success">Employee</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ emp.department }}</td>
+                    <td>₹{{ "{:,.0f}".format(emp.salary) }}</td>
+                    <td style="text-align: right;">
+                        <a href="/employees/edit/{{ emp.id }}" class="btn btn-secondary"
+                            style="padding: 0.25rem 0.75rem; font-size: 0.875rem;">Edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

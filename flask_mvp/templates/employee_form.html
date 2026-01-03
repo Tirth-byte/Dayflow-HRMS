@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <div class="card">
+        <h2>{{ 'Edit' if employee else 'New' }} Employee</h2>
+        <form method="POST">
+            <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" name="name" class="form-control" required value="{{ employee.name if employee }}">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" required value="{{ employee.email if employee }}">
+            </div>
+            {% if not employee %}
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+            {% endif %}
+            <div class="form-group">
+                <label class="form-label">Department</label>
+                <input type="text" name="department" class="form-control" value="{{ employee.department if employee }}">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Role</label>
+                <select name="role" class="form-control">
+                    <option value="employee" {% if employee and employee.role=='employee' %}selected{% endif %}>Employee
+                    </option>
+                    <option value="hr" {% if employee and employee.role=='hr' %}selected{% endif %}>HR Manager</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Salary</label>
+                <input type="number" name="salary" class="form-control" required
+                    value="{{ employee.salary if employee }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Save Employee</button>
+            <a href="/employees" class="btn" style="color: #666;">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
