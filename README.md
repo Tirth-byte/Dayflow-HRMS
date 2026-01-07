@@ -1,23 +1,122 @@
-# Dayflow HRMS - Hackathon Setup
+Dayflow HRM – Localhost Setup (Virtual Environment)
 
-## 1. Start Database Service
-Before running Odoo, ensure PostgreSQL is active.
+Dayflow HRM is a web-based Human Resource Management System.This guide explains how to run the project on localhost using a Python Virtual Environment (venv).
 
-### Linux / MacOS (Standard)
-```bash
-sudo service postgresql start
-```
-*Note: On MacOS with Homebrew, you might use: `brew services start postgresql`*
+🚀 Tech Stack
 
-### Windows
-Start **PostgreSQL** service from the Services panel.
+Backend: Python (Django / Flask)
 
-## 2. Run Odoo Server
-```bash
-./odoo-bin -c odoo.conf -u dayflow
-```
+Frontend: HTML / CSS / JS or React (optional)
 
-## 3. Access
-Open Browser: [http://localhost:8069](http://localhost:8069)
-*   User: `admin`
-*   Password: `admin`
+Database: SQLite (default) or PostgreSQL
+
+Environment: Python Virtual Environment (venv)
+
+📦 Prerequisites
+
+Make sure you have the following installed:
+
+Python 3.10+
+
+Git
+
+pip (comes with Python)
+
+Check versions:
+
+python --version
+pip --version
+
+📁 Project Structure
+
+dayflow-hrm/
+├── backend/
+│   ├── manage.py
+│   ├── requirements.txt
+│   └── dayflow/
+├── venv/
+└── README.md
+
+🧪 Step 1: Clone the Repository
+
+git clone https://github.com/your-username/dayflow-hrm.git
+cd dayflow-hrm
+
+🐍 Step 2: Create Virtual Environment
+
+Windows
+
+python -m venv venv
+venv\Scripts\activate
+
+macOS / Linux
+
+python3 -m venv venv
+source venv/bin/activate
+
+You should see (venv) in your terminal.
+
+📥 Step 3: Install Dependencies
+
+cd backend
+pip install -r requirements.txt
+
+⚙️ Step 4: Environment Variables (Optional)
+
+Create a .env file inside backend/:
+
+DEBUG=True
+SECRET_KEY=dev_secret_key
+DATABASE_NAME=db.sqlite3
+
+🗄️ Step 5: Database Setup
+
+Run migrations
+
+python manage.py migrate
+
+Create admin user
+
+python manage.py createsuperuser
+
+▶️ Step 6: Run the Server
+
+python manage.py runserver
+
+🌐 Access the Application
+
+Web App: http://127.0.0.1:8000/
+
+Admin Panel: http://127.0.0.1:8000/admin
+
+🛑 Stop the Server
+
+Press:
+
+CTRL + C
+
+Deactivate virtual environment:
+
+deactivate
+
+🧹 Common Issues
+
+venv not activating → Check Python installation path
+
+Module not found → Reinstall requirements
+
+Port already in use → Run:
+
+python manage.py runserver 8080
+
+🔒 Security Notes
+
+Do NOT commit venv/
+
+Keep SECRET_KEY private
+
+This setup is for development only
+
+📄 License
+
+Educational / Internal use only.
